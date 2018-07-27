@@ -41,9 +41,14 @@ router.post('/tray/:tray_id/user/:user_id', (req, res, next) => {
 router.delete('/trayUser/:tray_id', (req, res, next) => {
   Promise.resolve()
   .then( () => DBClient.getTrayUserMapping(req.params.tray_id) )
-  .then( (mapping) => mapping.user_id)
+  .then( (mapping) => {
+    if(mapping) {
+      return mapping
+    } else {
+      throw new Error( 'no mapping found' )
+    }
+  })
   .then( (userId) => {
-
     RedisClient.get( `active_user_${userId}_meal` )
     .then( mealId => DBClient.markMealComplete( mealId, userId))
     .then( () => RedisClient.delete(`active_user_${userId}_meal`))
