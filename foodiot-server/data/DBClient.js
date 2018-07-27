@@ -319,7 +319,7 @@ const DBClient = {
             DBClient.database.collection( 'meals' ).findOne( {'$and' : [ {'user_id': userId} , {'meal_id' : mealId} ] }, (err, meal) => {
                 if(err) return reject(err);
                 if(!meal) {
-                    return reject('No meal found')
+                    return resolve({})
                 }
                 DBClient.database.collection( 'meals' ).updateOne( {'$and' : [ {'user_id': userId} , {'meal_id' : mealId} ] }, { $set: { 'status' : 'COMPLETED' } }, (err, result) => {
                     if(err) reject(err);

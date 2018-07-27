@@ -46,6 +46,7 @@ router.delete('/trayUser/:tray_id', (req, res, next) => {
 
     RedisClient.get( `active_user_${userId}_meal` )
     .then( mealId => DBClient.markMealComplete( mealId, userId))
+    .then( () => RedisClient.delete(`active_user_${userId}_meal`))
     .then( () => DBClient.deleteTrayUserMapping(req.params.tray_id))
     .then( result => {
       res.json(result);
